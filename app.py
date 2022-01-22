@@ -1,7 +1,8 @@
 from os import getenv
 from collections import Counter
 from imbox import Imbox
-from tabulate import tabulate
+from rich.console import Console
+from rich.table import Table
 
 
 IMAP_SERVER = getenv('IMAP_SERVER', 'imap.gmail.com')
@@ -27,4 +28,14 @@ with Imbox(IMAP_SERVER,
 
 count = Counter(emails)
 
-print(tabulate(count.items(), headers = ['Email', 'Count']))  
+table = Table(title="Unread Email Counter")
+
+table.add_column("Emai", style="cyan", justify="left", no_wrap=True)
+table.add_column("Count", style="magenta", justify="center",)
+
+for c in count.most_common(1000):
+    table.add_row(c[0], str(c[1]))
+
+
+console = Console()
+console.print(table)
