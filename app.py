@@ -3,6 +3,7 @@ from collections import Counter
 from imbox import Imbox
 from rich.console import Console
 from rich.table import Table
+from rich.progress import track
 
 
 IMAP_SERVER = getenv('IMAP_SERVER', 'imap.gmail.com')
@@ -20,7 +21,7 @@ with Imbox(IMAP_SERVER,
 
     unread_inbox_messages = imbox.messages(unread=True)
 
-    for uid, message in unread_inbox_messages:
+    for uid, message in track(unread_inbox_messages, description="Processing unread emails..."):
     # Every message is an object with the following keys
         emails.append(
             message.sent_from[0]['email']
